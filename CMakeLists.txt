@@ -12,11 +12,6 @@ message("boost include is ${Boost_INCLUDE_DIRS}")
 include_directories(/home/user/CLionProjects/daemond)
 
 set(ABSTRACT_SRC
-        src/abstract/manager/manager.cpp
-        src/abstract/manager/manager.h
-        src/abstract/manager/manager_codes.h
-        src/abstract/manager/loaded_unit.h
-
         src/abstract/unit/data/unit_id.h
 
         src/abstract/unit/data/unit_attr.h
@@ -39,23 +34,35 @@ set(ABSTRACT_SRC
 
         src/abstract/unit/runtime/runtime_data.h
         src/abstract/unit/runtime/runtime_status.h
+        src/abstract/unit/runtime/runtime_status.cpp
 
-        src/abstract/comm/comm_center.h
-        src/abstract/comm/comm_session.h
+        src/abstract/manager/manager.cpp
+        src/abstract/manager/manager.h
+        src/abstract/manager/manager_codes.h
+        src/abstract/manager/loaded_unit.h
+        src/abstract/manager/loaded_unit.cpp
+
+        src/abstract/comms/comms_server.h
+        src/abstract/comms/comms_session.h
+        src/abstract/comms/comms_client.h
 )
 
 set(LIBC_SRC
-    lib/trie.h
+        lib/trie.h
 )
 
 set(SERIALIZATION_SRC
-                src/abstract/serialization/common.h
+        src/abstract/serialization/common.h
         src/abstract/serialization/unit_serialization.cpp
 )
 
 set(DESERIALIZATION_SRC
-                src/abstract/serialization/common.h
+        src/abstract/serialization/common.h
         src/abstract/serialization/unit_deserialization.cpp
+)
+
+set(CACHE_SRC
+        src/abstract/serialization/cache/cache.h
 )
 
 set(LINUX_SRC
@@ -68,21 +75,27 @@ set(LINUX_SRC
         src/os/linux/linux_command.h
         src/os/linux/linux_command.cpp
 
-        src/os/linux/linux_comm_center.cpp
-        src/os/linux/linux_comm_center.h
+        src/os/linux/comms/unix_sock/linux_comm_center.cpp
+        src/os/linux/comms/unix_sock/linux_comm_center.h
 
-        src/os/linux/linux_comm_session.cpp
-        src/os/linux/linux_comm_session.h
+        src/os/linux/comms/unix_sock/linux_comm_session.cpp
+        src/os/linux/comms/unix_sock/linux_comm_session.h
+
+        src/os/linux/comms/unix_sock/linux_comm_client.cpp
+        src/os/linux/comms/unix_sock/linux_comm_client.h
+
+        src/os/linux/cache.cpp
 )
 
 add_executable(daemond
         ${ABSTRACT_SRC}
         ${LIBC_SRC}
+        ${SERIALIZATION_SRC}
         ${DESERIALIZATION_SRC}
+        ${CACHE_SRC}
         ${LINUX_SRC}
 
         src/main/linux/daemond.cpp
-
 )
 target_link_libraries(daemond PRIVATE Boost::serialization)
 target_link_libraries(daemond PRIVATE Boost::program_options)
@@ -91,6 +104,8 @@ add_executable(daemond_ctl
         ${ABSTRACT_SRC}
         ${LIBC_SRC}
         ${SERIALIZATION_SRC}
+        ${DESERIALIZATION_SRC}
+        ${CACHE_SRC}
         ${LINUX_SRC}
 
         src/main/linux/daemond_ctl.cpp
@@ -100,6 +115,8 @@ target_link_libraries(daemond_ctl PRIVATE Boost::program_options)
 
 add_executable(serializer
         ${SERIALIZATION_SRC}
+        ${CACHE_SRC}
+        ${LINUX_SRC}
 
         src/main/serialize.cpp
 )

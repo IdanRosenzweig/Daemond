@@ -66,7 +66,7 @@ protected:
 public:
     void load_unit(const unit_data &static_data) {
         if (unit_exists(static_data.id)) {
-            cout << "unit is already loaded" << endl;
+            cerr << "unit is already loaded" << endl;
             return;
         }
 
@@ -79,7 +79,7 @@ public:
         units[in] = std::move(ptr);
         mapper.add(static_data.id, in);
 
-        // special management
+        // special attributes
         if (units[in]->data.attr.autostart_on_load) {
             _start_unit_at_index(in);
         }
@@ -102,6 +102,11 @@ public:
 
     bool unit_exists(const unit_id &id) {
         return mapper.exists(id);
+    }
+
+    const loaded_unit& search_unit(const unit_id& id) {
+        if (!unit_exists(id)) throw "no such unit";
+        return *units[mapper.search(id)];
     }
 
     void start_unit(const unit_id &id) {
@@ -143,6 +148,7 @@ public:
             }
         }
     }
+
 
     virtual ~manager() {
         for (size_t in = 0; in < units.size(); in++) {

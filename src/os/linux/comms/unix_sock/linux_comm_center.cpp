@@ -6,8 +6,8 @@
 
 #include "linux_comm_session.h"
 
-void linux_comm_center::open_center() {
-    if (is_center_open()) return;
+void linux_comm_center::open_server() {
+    if (is_server_open()) return;
 
     sd = socket(AF_UNIX, SOCK_STREAM, 0);
 #define SOCK_OPEN_ERR (-1)
@@ -41,8 +41,8 @@ void linux_comm_center::open_center() {
     alive = true;
 }
 
-unique_ptr<comm_session> linux_comm_center::next_session() {
-    if (!is_center_open()) return nullptr;
+unique_ptr<comms_session> linux_comm_center::next_session() {
+    if (!is_server_open()) return nullptr;
 
     int client_fd = accept(sd, nullptr, nullptr);
 #define ACCEPT_ERR (-1)
@@ -54,8 +54,8 @@ unique_ptr<comm_session> linux_comm_center::next_session() {
     return make_unique<linux_comm_session>(client_fd);
 }
 
-void linux_comm_center::close_center() {
-    if (!is_center_open()) return;
+void linux_comm_center::close_server() {
+    if (!is_server_open()) return;
 
     if (sd != SOCKET_SD_NONE) {
         close(sd);
@@ -64,6 +64,6 @@ void linux_comm_center::close_center() {
     alive = false;
 }
 
-bool linux_comm_center::is_center_open() {
+bool linux_comm_center::is_server_open() {
     return alive;
 }

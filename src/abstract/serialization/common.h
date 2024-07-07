@@ -2,6 +2,7 @@
 #define UNIT_SER_COMMON_H
 
 #include "../unit/data/unit_data.h"
+#include "../manager/loaded_unit.h"
 
 #include <stdint.h>
 #include <string>
@@ -86,6 +87,17 @@ namespace boost {
             ar & c.mng;
             ar & c.attr;
             ar & c.deps;
+        }
+
+        template<class Archive>
+        void serialize(Archive &ar, runtime_data &c, const unsigned int version) {
+            ar & c.status;
+        }
+
+        template<class Archive>
+        void serialize(Archive &ar, loaded_unit &c, const unsigned int version) {
+            ar & c.data;
+            ar & c.runtime;
         }
     }
 }

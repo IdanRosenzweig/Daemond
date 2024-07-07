@@ -8,9 +8,10 @@
 #include "../../abstract/serialization/unit_serialization.h"
 
 #include "../../abstract/manager/manager_codes.h"
-#include "../../os/linux/linux_comm_center.h"
+#include "../../os/linux/comms/unix_sock/linux_comm_client.h"
 
 #include <boost/program_options.hpp>
+#include <src/abstract/serialization/unit_deserialization.h>
 namespace po = boost::program_options;
 
 void load(const string &path) {
@@ -29,25 +30,21 @@ void load(const string &path) {
     memcpy(curr_ptr, serialized.data(), serialized.size());
     curr_ptr += serialized.size();
 
-    // connect to daemond
-    int sd = socket(AF_UNIX, SOCK_STREAM, 0);
-#define SOCK_OPEN_ERR (-1)
-    if (sd == SOCK_OPEN_ERR) perror("socket");
+    // connect to server
+    linux_comm_client client;
+    client.open_client();
+    auto sess = std::move(client.conn_to_server());
 
-    struct sockaddr_un address;
-    memset(&address, 0, sizeof(address));
-    address.sun_family = AF_UNIX;
-    strncpy(address.sun_path, LINUX_COMM_CENTER_PATH, sizeof(address.sun_path) - 1);
-#define CONNECT_ERR (-1)
-    if (connect(sd, (const sockaddr *) &address, sizeof(address)) == CONNECT_ERR) perror("connect");
+    // send message
+    cout << "sending message" << endl;
+    int cnt = curr_ptr - buff;
+    if (sess->send_data(buff, cnt) != cnt) {
+        cerr << "couldn't send whole message" << endl;
+        sess->terminate_session();
+        return;
+    }
 
-    // send msg
-#define SEND_ERR (-1)
-    if (send(sd, buff, curr_ptr - buff, 0) == SEND_ERR) perror("send");
-
-    cout << "message send" << endl;
-
-    close(sd);
+    sess->terminate_session();
 }
 
 void unload(const string &path) {
@@ -66,25 +63,21 @@ void unload(const string &path) {
     memcpy(curr_ptr, serialized_id.data(), serialized_id.size());
     curr_ptr += serialized_id.size();
 
-    // connect to daemond
-    int sd = socket(AF_UNIX, SOCK_STREAM, 0);
-#define SOCK_OPEN_ERR (-1)
-    if (sd == SOCK_OPEN_ERR) perror("socket");
+    // connect to server
+    linux_comm_client client;
+    client.open_client();
+    auto sess = std::move(client.conn_to_server());
 
-    struct sockaddr_un address;
-    memset(&address, 0, sizeof(address));
-    address.sun_family = AF_UNIX;
-    strncpy(address.sun_path, LINUX_COMM_CENTER_PATH, sizeof(address.sun_path) - 1);
-#define CONNECT_ERR (-1)
-    if (connect(sd, (const sockaddr *) &address, sizeof(address)) == CONNECT_ERR) perror("connect");
+    // send message
+    cout << "sending message" << endl;
+    int cnt = curr_ptr - buff;
+    if (sess->send_data(buff, cnt) != cnt) {
+        cerr << "couldn't send whole message" << endl;
+        sess->terminate_session();
+        return;
+    }
 
-    // send msg
-#define SEND_ERR (-1)
-    if (send(sd, buff, curr_ptr - buff, 0) == SEND_ERR) perror("send");
-
-    cout << "message send" << endl;
-
-    close(sd);
+    sess->terminate_session();
 }
 
 void start(const string &path) {
@@ -103,25 +96,21 @@ void start(const string &path) {
     memcpy(curr_ptr, serialized_id.data(), serialized_id.size());
     curr_ptr += serialized_id.size();
 
-    // connect to daemond
-    int sd = socket(AF_UNIX, SOCK_STREAM, 0);
-#define SOCK_OPEN_ERR (-1)
-    if (sd == SOCK_OPEN_ERR) perror("socket");
+    // connect to server
+    linux_comm_client client;
+    client.open_client();
+    auto sess = std::move(client.conn_to_server());
 
-    struct sockaddr_un address;
-    memset(&address, 0, sizeof(address));
-    address.sun_family = AF_UNIX;
-    strncpy(address.sun_path, LINUX_COMM_CENTER_PATH, sizeof(address.sun_path) - 1);
-#define CONNECT_ERR (-1)
-    if (connect(sd, (const sockaddr *) &address, sizeof(address)) == CONNECT_ERR) perror("connect");
+    // send message
+    cout << "sending message" << endl;
+    int cnt = curr_ptr - buff;
+    if (sess->send_data(buff, cnt) != cnt) {
+        cerr << "couldn't send whole message" << endl;
+        sess->terminate_session();
+        return;
+    }
 
-    // send msg
-#define SEND_ERR (-1)
-    if (send(sd, buff, curr_ptr - buff, 0) == SEND_ERR) perror("send");
-
-    cout << "message send" << endl;
-
-    close(sd);
+    sess->terminate_session();
 }
 
 void stop(const string &path) {
@@ -140,25 +129,108 @@ void stop(const string &path) {
     memcpy(curr_ptr, serialized_id.data(), serialized_id.size());
     curr_ptr += serialized_id.size();
 
-    // connect to daemond
-    int sd = socket(AF_UNIX, SOCK_STREAM, 0);
-#define SOCK_OPEN_ERR (-1)
-    if (sd == SOCK_OPEN_ERR) perror("socket");
+    // connect to server
+    linux_comm_client client;
+    client.open_client();
+    auto sess = std::move(client.conn_to_server());
 
-    struct sockaddr_un address;
-    memset(&address, 0, sizeof(address));
-    address.sun_family = AF_UNIX;
-    strncpy(address.sun_path, LINUX_COMM_CENTER_PATH, sizeof(address.sun_path) - 1);
-#define CONNECT_ERR (-1)
-    if (connect(sd, (const sockaddr *) &address, sizeof(address)) == CONNECT_ERR) perror("connect");
+    // send message
+    cout << "sending message" << endl;
+    int cnt = curr_ptr - buff;
+    if (sess->send_data(buff, cnt) != cnt) {
+        cerr << "couldn't send whole message" << endl;
+        sess->terminate_session();
+        return;
+    }
 
-    // send msg
-#define SEND_ERR (-1)
-    if (send(sd, buff, curr_ptr - buff, 0) == SEND_ERR) perror("send");
+    sess->terminate_session();
+}
 
-    cout << "message send" << endl;
+bool exists(const string &path) {
+    // prepare message
+#define BUFF_SZ 60000
+    uint8_t buff[BUFF_SZ];
+    memset(buff, 0, BUFF_SZ);
 
-    close(sd);
+    uint8_t *curr_ptr = buff;
+
+    *(manager_codes *) curr_ptr = TEST_UNIT_EXISTS;
+    curr_ptr += sizeof(manager_codes);
+
+    ustring serialized_id = serialize_unit_id(path);
+
+    memcpy(curr_ptr, serialized_id.data(), serialized_id.size());
+    curr_ptr += serialized_id.size();
+
+    // connect to server
+    linux_comm_client client;
+    client.open_client();
+    auto sess = std::move(client.conn_to_server());
+
+    // send message
+    cout << "sending message" << endl;
+    int cnt = curr_ptr - buff;
+    if (sess->send_data(buff, cnt) != cnt) {
+        cerr << "couldn't send whole message" << endl;
+        sess->terminate_session();
+        throw;
+    }
+
+    // receive back
+    memset(buff, 0, BUFF_SZ);
+    if (sess->recv_data(buff, BUFF_SZ) == 0) {
+        cerr << "couldn't receive data" << endl;
+        sess->terminate_session();
+        throw;
+    }
+
+    bool exists = buff[0] == 1;
+    sess->terminate_session();
+    return exists;
+}
+
+loaded_unit status(const string &path) {
+    // prepare message
+#define BUFF_SZ 60000
+    uint8_t buff[BUFF_SZ];
+    memset(buff, 0, BUFF_SZ);
+
+    uint8_t *curr_ptr = buff;
+
+    *(manager_codes *) curr_ptr = GET_UNIT_STATUS;
+    curr_ptr += sizeof(manager_codes);
+
+    ustring serialized_id = serialize_unit_id(path);
+
+    memcpy(curr_ptr, serialized_id.data(), serialized_id.size());
+    curr_ptr += serialized_id.size();
+
+    // connect to server
+    linux_comm_client client;
+    client.open_client();
+    auto sess = std::move(client.conn_to_server());
+
+    // send message
+    cout << "sending message" << endl;
+    int cnt = curr_ptr - buff;
+    if (sess->send_data(buff, cnt) != cnt) {
+        cerr << "couldn't send whole message" << endl;
+        sess->terminate_session();
+        throw;
+    }
+
+    // receive bac,
+    memset(buff, 0, BUFF_SZ);
+    cnt =sess->recv_data(buff, BUFF_SZ);
+    if (cnt == 0) {
+        cerr << "couldn't receive data" << endl;
+        sess->terminate_session();
+        throw;
+    }
+
+    loaded_unit unit = deserialize_loaded_unit(ustring(buff, cnt));
+    sess->terminate_session();
+    return unit;
 }
 
 int main(int argc, char **argv) {
@@ -197,13 +269,26 @@ int main(int argc, char **argv) {
     // Handle commands
     if (command == "load") {
         load(path);
+        cout << "loaded unit" << endl;
     } else if (command == "unload") {
         unload(path);
+        cout << "unloaded unit" << endl;
     } else if (command == "start") {
         start(path);
+        cout << "started unit" << endl;
     } else if (command == "stop") {
         stop(path);
+        cout << "stopped unit" << endl;
+    } else if (command == "exists") {
+        if (exists(path)) {
+            cout << "unit exists";
+        } else {
+            cout << "unit doesn't exists";
+        }
+    } else if (command == "status") {
+        loaded_unit unit = status(path);
+        display_loaded_unit(unit);
     } else {
-        cerr << "Invalid command. Use start, stop, restart, or status" << endl;
+        cerr << "Invalid command. Use load, unload, start, stop, exists or status" << endl;
     }
 }

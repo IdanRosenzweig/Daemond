@@ -9,6 +9,8 @@ struct loaded_unit {
     runtime_data runtime;
 };
 
+void display_loaded_unit(const loaded_unit& unit);
+
 loaded_unit* factory_generate_unit(); // implementation is OS specific
 
 #endif //LOADED_UNIT_H
