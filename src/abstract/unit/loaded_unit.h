@@ -1,8 +1,8 @@
 #ifndef LOADED_UNIT_H
 #define LOADED_UNIT_H
 
-#include "../unit/data/unit_data.h"
-#include "../unit/runtime/runtime_data.h"
+#include "data/unit_data.h"
+#include "runtime/runtime_data.h"
 
 struct loaded_unit {
     unit_data data;

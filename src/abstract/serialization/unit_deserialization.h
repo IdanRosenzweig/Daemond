@@ -2,8 +2,8 @@
 #define UNIT_DESERIALIZATION_H
 
 #include "common.h"
-#include "../unit/data/unit_data.h"
-#include "src/abstract/manager/loaded_unit.h"
+#include "src/abstract/unit/data/unit_data.h"
+#include "src/abstract/unit/loaded_unit.h"
 
 /** unit data deserialization */
 // deserialize a unit data (from either a ustring or a source text file)

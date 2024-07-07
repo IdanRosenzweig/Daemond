@@ -1,12 +1,12 @@
 #ifndef LINUX_COMM_CENTER_H
 #define LINUX_COMM_CENTER_H
 
-#include "../../../../abstract/comms/comms_server.h"
+#include "src/abstract/comms/comms_server.h"
 
 #define SOCKET_SD_NONE (-1)
 #define LINUX_COMM_CENTER_PATH "/run/daemond_comm_center"
 
-class linux_comm_center : public comms_server {
+class linux_comm_server : public comms_server {
 private:
     int sd = SOCKET_SD_NONE;
     int alive = false;

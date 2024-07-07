@@ -1,6 +1,7 @@
 #include "unit_serialization.h"
 #include "common.h"
 #include "cache/cache.h"
+#include "config/conf.h"
 
 #include <filesystem>
 #include <fstream>
@@ -9,7 +10,6 @@
 #include <boost/archive/text_oarchive.hpp>
 #include <boost/serialization/vector.hpp>
 #include <boost/serialization/string.hpp>
-
 
 void serialize_unit_data_to_file(const unit_data &data, const string &dest) {
     ofstream out(dest);
@@ -25,6 +25,7 @@ void serialize_unit_data_to_file(const string &source, const string &dest) {
 
     create_cache_dir();
     if (!is_in_cache(cache)) {
+        cout << "unit data not in cache, compiling unit..." << endl;
         string command = PROJECT_DIR "/scripts/serialize.sh unit ";
         command += source;
         system(command.c_str());
@@ -36,7 +37,6 @@ void serialize_unit_data_to_file(const string &source, const string &dest) {
 
     // get from cache
     string cp_comm = "cp " + ser_data_file + " ./" + dest;
-    cout << "executing " << cp_comm << endl;
     system(cp_comm.c_str());
 }
 
@@ -84,6 +84,7 @@ void serialize_unit_id_to_file(const string &source, const string &dest) {
 
     create_cache_dir();
     if (!is_in_cache(cache)) {
+        cout << "unit id is not in cache, compiling unit..." << endl;
         string command = PROJECT_DIR "/scripts/serialize.sh id ";
         command += source;
         system(command.c_str());

@@ -1,8 +1,8 @@
 #ifndef UNIT_SER_COMMON_H
 #define UNIT_SER_COMMON_H
 
-#include "../unit/data/unit_data.h"
-#include "../manager/loaded_unit.h"
+#include "src/abstract/unit/data/unit_data.h"
+#include "src/abstract/unit/loaded_unit.h"
 
 #include <stdint.h>
 #include <string>
@@ -42,14 +42,14 @@ namespace boost {
         }
 
         template<class Archive>
-        void serialize(Archive &ar, unit_management &c, const unsigned int version) {
-            ar & c.start_unit.pre_start;
-            ar & c.start_unit.start;
-            ar & c.start_unit.post_start;
-            ar & c.reload_unit.reload;
-            ar & c.stop_unit.pre_stop;
-            ar & c.stop_unit.stop;
-            ar & c.stop_unit.post_stop;
+        void serialize(Archive &ar, unit_exec &c, const unsigned int version) {
+            ar & c.start.pre_start;
+            ar & c.start.start;
+            ar & c.start.post_start;
+            ar & c.reload.reload;
+            ar & c.stop.pre_stop;
+            ar & c.stop.stop;
+            ar & c.stop.post_stop;
         }
 
         template<class Archive>
@@ -84,7 +84,7 @@ namespace boost {
             ar & c.desc;
             ar & c.type;
             ar & c.prio;
-            ar & c.mng;
+            ar & c.exec;
             ar & c.attr;
             ar & c.deps;
         }

@@ -1,7 +1,7 @@
 #ifndef LINUX_COMM_CLIENT_H
 #define LINUX_COMM_CLIENT_H
 
-#include "../../../../abstract/comms/comms_client.h"
+#include "src/abstract/comms/comms_client.h"
 
 struct linux_comm_client : public comms_client {
     void open_client() override {}

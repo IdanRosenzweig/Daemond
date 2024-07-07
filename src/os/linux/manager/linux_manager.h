@@ -1,7 +1,7 @@
 #ifndef LINUX_MANAGER_H
 #define LINUX_MANAGER_H
 
-#include "../../abstract/manager/manager.h"
+#include "src/abstract/manager/manager.h"
 
 class linux_manager : public manager {
 protected:

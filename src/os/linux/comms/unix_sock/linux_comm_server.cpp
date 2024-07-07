@@ -1,4 +1,4 @@
-#include "linux_comm_center.h"
+#include "linux_comm_server.h"
 
 #include <cstring>
 #include <sys/socket.h>
@@ -6,7 +6,7 @@
 
 #include "linux_comm_session.h"
 
-void linux_comm_center::open_server() {
+void linux_comm_server::open_server() {
     if (is_server_open()) return;
 
     sd = socket(AF_UNIX, SOCK_STREAM, 0);
@@ -41,7 +41,7 @@ void linux_comm_center::open_server() {
     alive = true;
 }
 
-unique_ptr<comms_session> linux_comm_center::next_session() {
+unique_ptr<comms_session> linux_comm_server::next_session() {
     if (!is_server_open()) return nullptr;
 
     int client_fd = accept(sd, nullptr, nullptr);
@@ -54,7 +54,7 @@ unique_ptr<comms_session> linux_comm_center::next_session() {
     return make_unique<linux_comm_session>(client_fd);
 }
 
-void linux_comm_center::close_server() {
+void linux_comm_server::close_server() {
     if (!is_server_open()) return;
 
     if (sd != SOCKET_SD_NONE) {
@@ -64,6 +64,6 @@ void linux_comm_center::close_server() {
     alive = false;
 }
 
-bool linux_comm_center::is_server_open() {
+bool linux_comm_server::is_server_open() {
     return alive;
 }

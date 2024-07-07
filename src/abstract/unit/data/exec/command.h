@@ -5,8 +5,6 @@
 #include <memory>
 using namespace std;
 
-struct command_exec_data;
-
 struct command {
     string script;
 

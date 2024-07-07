@@ -5,14 +5,14 @@ struct unit_data unit {
     .desc = {"sample unit for ssh daemon", ""},
     .type = DAEMON,
     .prio = 0,
-    .mng = {
-        .start_unit = {
+    .exec = {
+        .start = {
             {"mkdir -p /run/sshd"},
             {"/usr/sbin/sshd"},
             empty_command
         },
-        .reload_unit = {empty_command},
-        .stop_unit = {
+        .reload = {empty_command},
+        .stop = {
             empty_command,
             {"kill $(pidof sshd)"},
             {"rm -rf /run/sshd"}

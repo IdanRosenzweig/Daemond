@@ -1,7 +1,7 @@
 #ifndef LINUX_COMM_SESSION_H
 #define LINUX_COMM_SESSION_H
 
-#include "../../../../abstract/comms/comms_session.h"
+#include "src/abstract/comms/comms_session.h"
 
 #define SOCKET_SD_NONE (-1)
 struct linux_comm_session : public comms_session {

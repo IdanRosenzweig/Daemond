@@ -1,17 +1,17 @@
 #include <cstring>
 #include <fstream>
 #include <iostream>
-#include <sys/socket.h>
-#include <sys/un.h>
-#include <unistd.h>
 
-#include "../../abstract/serialization/unit_serialization.h"
+#include "injector.h"
 
-#include "../../abstract/manager/manager_codes.h"
-#include "../../os/linux/comms/unix_sock/linux_comm_client.h"
+#include "src/abstract/serialization/common.h"
+#include "src/abstract/serialization/unit_serialization.h"
+#include "src/abstract/serialization/unit_deserialization.h"
+
+#include "src/abstract/manager/manager_codes.h"
 
 #include <boost/program_options.hpp>
-#include <src/abstract/serialization/unit_deserialization.h>
+
 namespace po = boost::program_options;
 
 void load(const string &path) {
@@ -31,12 +31,10 @@ void load(const string &path) {
     curr_ptr += serialized.size();
 
     // connect to server
-    linux_comm_client client;
-    client.open_client();
-    auto sess = std::move(client.conn_to_server());
+    get_comms_client()->open_client();
+    auto sess = std::move(get_comms_client()->conn_to_server());
 
     // send message
-    cout << "sending message" << endl;
     int cnt = curr_ptr - buff;
     if (sess->send_data(buff, cnt) != cnt) {
         cerr << "couldn't send whole message" << endl;
@@ -64,12 +62,10 @@ void unload(const string &path) {
     curr_ptr += serialized_id.size();
 
     // connect to server
-    linux_comm_client client;
-    client.open_client();
-    auto sess = std::move(client.conn_to_server());
+    get_comms_client()->open_client();
+    auto sess = std::move(get_comms_client()->conn_to_server());
 
     // send message
-    cout << "sending message" << endl;
     int cnt = curr_ptr - buff;
     if (sess->send_data(buff, cnt) != cnt) {
         cerr << "couldn't send whole message" << endl;
@@ -97,12 +93,10 @@ void start(const string &path) {
     curr_ptr += serialized_id.size();
 
     // connect to server
-    linux_comm_client client;
-    client.open_client();
-    auto sess = std::move(client.conn_to_server());
+    get_comms_client()->open_client();
+    auto sess = std::move(get_comms_client()->conn_to_server());
 
     // send message
-    cout << "sending message" << endl;
     int cnt = curr_ptr - buff;
     if (sess->send_data(buff, cnt) != cnt) {
         cerr << "couldn't send whole message" << endl;
@@ -130,12 +124,10 @@ void stop(const string &path) {
     curr_ptr += serialized_id.size();
 
     // connect to server
-    linux_comm_client client;
-    client.open_client();
-    auto sess = std::move(client.conn_to_server());
+    get_comms_client()->open_client();
+    auto sess = std::move(get_comms_client()->conn_to_server());
 
     // send message
-    cout << "sending message" << endl;
     int cnt = curr_ptr - buff;
     if (sess->send_data(buff, cnt) != cnt) {
         cerr << "couldn't send whole message" << endl;
@@ -163,12 +155,10 @@ bool exists(const string &path) {
     curr_ptr += serialized_id.size();
 
     // connect to server
-    linux_comm_client client;
-    client.open_client();
-    auto sess = std::move(client.conn_to_server());
+    get_comms_client()->open_client();
+    auto sess = std::move(get_comms_client()->conn_to_server());
 
     // send message
-    cout << "sending message" << endl;
     int cnt = curr_ptr - buff;
     if (sess->send_data(buff, cnt) != cnt) {
         cerr << "couldn't send whole message" << endl;
@@ -206,12 +196,10 @@ loaded_unit status(const string &path) {
     curr_ptr += serialized_id.size();
 
     // connect to server
-    linux_comm_client client;
-    client.open_client();
-    auto sess = std::move(client.conn_to_server());
+    get_comms_client()->open_client();
+    auto sess = std::move(get_comms_client()->conn_to_server());
 
     // send message
-    cout << "sending message" << endl;
     int cnt = curr_ptr - buff;
     if (sess->send_data(buff, cnt) != cnt) {
         cerr << "couldn't send whole message" << endl;
@@ -238,8 +226,8 @@ int main(int argc, char **argv) {
     po::options_description opts("daemond-ctl options");
     opts.add_options()
             ("help,h", "show options")
-            ("command", po::value<std::string>(), "command to execute, one of the following: load, unload, start, stop")
-            ("path", po::value<std::string>(), "path to the unit data");
+            ("command,c", po::value<std::string>(), "command to execute, one of the following: load, unload, start, stop, exists, status")
+            ("path,p", po::value<std::string>(), "path to the unit data");
 
     // Define positional options
     po::positional_options_description pos_desc;
@@ -289,6 +277,9 @@ int main(int argc, char **argv) {
         loaded_unit unit = status(path);
         display_loaded_unit(unit);
     } else {
-        cerr << "Invalid command. Use load, unload, start, stop, exists or status" << endl;
+        cout << opts;
+        return 1;
     }
+
+    return 0;
 }

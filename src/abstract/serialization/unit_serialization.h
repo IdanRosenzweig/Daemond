@@ -2,10 +2,8 @@
 #define UNIT_SERIALIZATION_H
 
 #include "common.h"
-#include "../unit/data/unit_data.h"
-#include "src/abstract/manager/loaded_unit.h"
-
-#define PROJECT_DIR "/home/user/CLionProjects/daemond"
+#include "src/abstract/unit/data/unit_data.h"
+#include "src/abstract/unit/loaded_unit.h"
 
 /** unit data serialization */
 // take a unit data (from either a struct or a text file) and serialize it into a destination file

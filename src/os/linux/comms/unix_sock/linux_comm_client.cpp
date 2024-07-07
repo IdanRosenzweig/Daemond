@@ -4,7 +4,7 @@
 #include <sys/socket.h>
 #include <sys/un.h>
 
-#include "linux_comm_center.h"
+#include "linux_comm_server.h"
 #include "linux_comm_session.h"
 
 unique_ptr<comms_session> linux_comm_client::conn_to_server() {

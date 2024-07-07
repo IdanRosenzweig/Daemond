@@ -1,7 +1,7 @@
 #ifndef LINUX_COMMAND_H
 #define LINUX_COMMAND_H
 
-#include "../../abstract/unit/data/management/command.h"
+#include "src/abstract/unit/data/exec/command.h"
 #include <sys/types.h>
 
 struct command_exec_data {
