@@ -9,8 +9,8 @@
 #include <boost/serialization/string.hpp>
 
 struct unit_data deserialize_unit_data(const ustring &serialization) {
-#define TEMP_FILE "tempfile"
-    ofstream out(TEMP_FILE);
+#define TEMP_FILE ".tempfile"
+    ofstream out(TEMP_FILE, ios::trunc);
     out.write((char *) serialization.c_str(), serialization.size());
     out.close();
 
@@ -32,8 +32,8 @@ struct unit_data deserialize_unit_data(const string &source) {
 }
 
 struct unit_id deserialize_unit_id(const ustring &serialization) {
-#define TEMP_FILE "tempfile"
-    ofstream out(TEMP_FILE);
+#define TEMP_FILE ".tempfile"
+    ofstream out(TEMP_FILE, ios::trunc);
     out.write((char *) serialization.c_str(), serialization.size());
     out.close();
 
@@ -55,8 +55,8 @@ struct unit_id deserialize_unit_id(const string &source) {
 }
 
 struct loaded_unit deserialize_loaded_unit(const ustring &serialization) {
-#define TEMP_FILE "tempfile"
-    ofstream out(TEMP_FILE);
+#define TEMP_FILE ".tempfile"
+    ofstream out(TEMP_FILE, ios::trunc);
     out.write((char *) serialization.c_str(), serialization.size());
     out.close();
 
