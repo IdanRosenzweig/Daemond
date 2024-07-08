@@ -2,7 +2,9 @@
 #define UNIT_TYPE_H
 
 enum unit_type {
-    DAEMON, DEVICE, NETWORK, PATROL, FS
+    DAEMON, // long living daemon
+    TASK, // one-time/temporary task
+    ROUTINE // interval routine
 };
 
 #endif //UNIT_TYPE_H

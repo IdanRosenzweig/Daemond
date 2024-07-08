@@ -7,7 +7,6 @@ set(CMAKE_CXX_STANDARD 20)
 find_package(Boost REQUIRED COMPONENTS serialization)
 find_package(Boost REQUIRED COMPONENTS program_options)
 include_directories(${Boost_INCLUDE_DIRS})
-message("boost include is ${Boost_INCLUDE_DIRS}")
 
 # include project root directory
 include_directories(${PROJECT_SOURCE_DIR})
@@ -24,7 +23,6 @@ set(ABSTRACT_SRC
         src/abstract/unit/data/unit_priority.h
 
         src/abstract/unit/data/exec/command.h
-        src/abstract/unit/data/exec/exec_start.h
         src/abstract/unit/data/exec/unit_exec.h
 
         src/abstract/unit/data/dependencies/dependency.h

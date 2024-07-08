@@ -43,13 +43,13 @@ namespace boost {
 
         template<class Archive>
         void serialize(Archive &ar, unit_exec &c, const unsigned int version) {
-            ar & c.start.pre_start;
-            ar & c.start.start;
-            ar & c.start.post_start;
-            ar & c.reload.reload;
-            ar & c.stop.pre_stop;
-            ar & c.stop.stop;
-            ar & c.stop.post_stop;
+            ar & c.pre_start;
+            ar & c.start;
+            ar & c.post_start;
+            ar & c.reload;
+            ar & c.pre_stop;
+            ar & c.stop;
+            ar & c.post_stop;
         }
 
         template<class Archive>
