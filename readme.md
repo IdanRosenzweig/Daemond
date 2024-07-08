@@ -7,7 +7,16 @@ Daemond operates using the concept of units, representing any daemon, service, o
 
 Supporting modern C++ for specifying units, Daemond offers greater flexibility and convenience compared to other popular daemon managers that rely on their own text file syntax.
 
-Daemond is composed out of two components: the main `daemond` program, which internally manages units, and `daemond_ctl`, a companion program providing easy access and querying of the main `daemond` program. this combination is similar to the way `systemd` and `systemctl` interact. 
+## architecture
+
+Daemond is composed out of two components:
+* the main `daemond` program, which internally manages units
+* `daemond_ctl`, a companion program providing easy access and querying of the main `daemond` program. this combination is similar to the way `systemd` and `systemctl` interact.
+
+in order to use Daemond:
+1. run the main `daemond` program on the machine (in the background or separate process etc...)
+2. specify various units in any file you want
+3. run the `daemond_ctl` program which will interact with the `daemond` program (via various communication channels like).
 
 ## usage
 Daemond supports the following operations on units:
@@ -17,7 +26,7 @@ Daemond supports the following operations on units:
 * query the status of a unit
 * unload a unit
 
-all of these operations can be done using the `daemond_ctl` program while the `daemond` program runs in the background.
+all of these operations can be done using the `daemond_ctl` program.
 
 ## unit specification
 look at the struct under `src/abstract/unit/data/unit_data.h`. to specify a unit that can be manged by `daemond`, write any valid C++ source file that contain a `unit_data` struct named `unit`, with your own values in it.
