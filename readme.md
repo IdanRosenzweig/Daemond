@@ -42,3 +42,9 @@ to start one of these units:
 
 ## dependencies
 Daemond uses the `libboost` library for serialization of data and for command line parsing. make sure you have libboost when compiling the project.
+
+## future TODOs
+* add support for unit dependencies
+* add netlink IPC channel to integrate with kernel level code
+* add external network IPC channel to integrate with remote systems
+* add support for Windows
