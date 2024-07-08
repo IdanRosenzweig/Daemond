@@ -5,8 +5,6 @@
 #include "lib/trie.h"
 
 #include <stack>
-#include <map>
-#include <vector>
 #include <memory>
 #include <iostream>
 using namespace std;
@@ -19,7 +17,7 @@ protected:
 private:
     stack<size_t> free_indexes;
 
-    size_t generate_free_index();
+    size_t generate_free_index() noexcept;
 
     // mapping unit's identifiers to their corresponding slot indexes
     class mapper {
@@ -28,13 +26,13 @@ private:
         map mappings;
 
     public:
-        void add(const unit_id &path, size_t index);
+        void add(const unit_id &path, size_t index)noexcept;
 
-        bool exists(const unit_id &path);
+        bool exists(const unit_id &path)noexcept;
 
         size_t search(const unit_id &path);
 
-        void remove(const unit_id &path);
+        void remove(const unit_id &path)noexcept;
     } mapper;
 
 protected:
@@ -44,17 +42,17 @@ protected:
 
 public:
 
-    void load_unit(const unit_data &static_data);
+    void load_unit(const unit_data &static_data)noexcept;
 
-    void unload_unit(const unit_id &id);
+    void unload_unit(const unit_id &id) noexcept;
 
-    bool unit_exists(const unit_id &id);
+    bool unit_exists(const unit_id &id)noexcept;
 
     const loaded_unit& search_unit(const unit_id& id);
 
-    void start_unit(const unit_id &id);
+    void start_unit(const unit_id &id)noexcept;
 
-    void stop_unit(const unit_id &id);
+    void stop_unit(const unit_id &id)noexcept;
 
     virtual ~manager();
 };

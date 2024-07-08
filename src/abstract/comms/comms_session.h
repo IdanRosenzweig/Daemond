@@ -8,7 +8,6 @@ struct comms_session {
     virtual bool is_session_alive() = 0;
 
     virtual ~comms_session() {
-        terminate_session();
     }
 };
 

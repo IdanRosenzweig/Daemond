@@ -1,6 +1,6 @@
 #include "manager.h"
 
-size_t manager::generate_free_index() {
+size_t manager::generate_free_index() noexcept {
     size_t in;
     if (!free_indexes.empty()) {
         in = free_indexes.top();
@@ -12,12 +12,12 @@ size_t manager::generate_free_index() {
     return in;
 }
 
-void manager::mapper::add(const unit_id &path, size_t index) {
+void manager::mapper::add(const unit_id &path, size_t index) noexcept{
     if (exists(path)) return;
     map::add_word(&mappings, path.name)->data = index;
 }
 
-bool manager::mapper::exists(const unit_id &path) {
+bool manager::mapper::exists(const unit_id &path)noexcept {
     return map::contains_word(&mappings, path.name);
 }
 
@@ -26,12 +26,12 @@ size_t manager::mapper::search(const unit_id &path) {
     return map::search(&mappings, path.name)->data;
 }
 
-void manager::mapper::remove(const unit_id &path) {
+void manager::mapper::remove(const unit_id &path)noexcept {
     if (!exists(path)) return;
     map::remove_word(&mappings, path.name);
 }
 
-void manager::load_unit(const unit_data &static_data) {
+void manager::load_unit(const unit_data &static_data) noexcept {
     if (unit_exists(static_data.id)) {
         cerr << "unit is already loaded" << endl;
         return;
@@ -52,13 +52,13 @@ void manager::load_unit(const unit_data &static_data) {
     }
 }
 
-void manager::unload_unit(const unit_id &id) {
+void manager::unload_unit(const unit_id &id) noexcept {
     if (!mapper.exists(id)) {
         cerr << "can't find the requested unit to unload" << endl;
         return;
     }
 
-    size_t in = mapper.search(id);
+    size_t in = mapper.search(id);;
 
     switch (units[in]->runtime.status) {
         case RUNNING: {
@@ -72,7 +72,7 @@ void manager::unload_unit(const unit_id &id) {
     free_indexes.push(in);
 }
 
-bool manager::unit_exists(const unit_id &id) {
+bool manager::unit_exists(const unit_id &id) noexcept {
     return mapper.exists(id);
 }
 
@@ -81,7 +81,7 @@ const loaded_unit & manager::search_unit(const unit_id &id) {
     return *units[mapper.search(id)];
 }
 
-void manager::start_unit(const unit_id &id) {
+void manager::start_unit(const unit_id &id) noexcept {
     if (!mapper.exists(id)) {
         cerr << "can't find the requested unit to start" << endl;
         return;
@@ -101,7 +101,7 @@ void manager::start_unit(const unit_id &id) {
     }
 }
 
-void manager::stop_unit(const unit_id &id) {
+void manager::stop_unit(const unit_id &id) noexcept {
     if (!mapper.exists(id)) {
         cerr << "can't find the requested unit to stop" << endl;
         return;

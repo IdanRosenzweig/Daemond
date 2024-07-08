@@ -3,7 +3,6 @@
 #include <fcntl.h>
 #include <filesystem>
 #include <iostream>
-#include <unistd.h>
 #include <sys/stat.h>
 
 #define CACHE_DIR "/run/daemond/cache"

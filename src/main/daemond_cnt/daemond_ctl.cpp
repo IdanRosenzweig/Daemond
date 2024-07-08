@@ -17,7 +17,7 @@ namespace po = boost::program_options;
 void load(const string &path) {
     // prepare message
 #define BUFF_SZ 60000
-    uint8_t buff[BUFF_SZ];
+    uint8_t buff[BUFF_SZ] = {0};
     memset(buff, 0, BUFF_SZ);
 
     uint8_t *curr_ptr = buff;
@@ -209,7 +209,7 @@ loaded_unit status(const string &path) {
 
     // receive bac,
     memset(buff, 0, BUFF_SZ);
-    cnt =sess->recv_data(buff, BUFF_SZ);
+    cnt = sess->recv_data(buff, BUFF_SZ);
     if (cnt == 0) {
         cerr << "couldn't receive data" << endl;
         sess->terminate_session();
@@ -226,7 +226,8 @@ int main(int argc, char **argv) {
     po::options_description opts("daemond-ctl options");
     opts.add_options()
             ("help,h", "show options")
-            ("command,c", po::value<std::string>(), "command to execute, one of the following: load, unload, start, stop, exists, status")
+            ("command,c", po::value<std::string>(),
+             "command to execute, one of the following: load, unload, start, stop, exists, status")
             ("path,p", po::value<std::string>(), "path to the unit data");
 
     // Define positional options
@@ -256,26 +257,44 @@ int main(int argc, char **argv) {
 
     // Handle commands
     if (command == "load") {
-        load(path);
-        cout << "loaded unit" << endl;
+        try {
+            load(path);
+            cout << "loaded unit" << endl;
+        } catch (...) {
+        }
     } else if (command == "unload") {
-        unload(path);
-        cout << "unloaded unit" << endl;
+        try {
+            unload(path);
+            cout << "unloaded unit" << endl;
+        } catch (...) {
+        }
     } else if (command == "start") {
-        start(path);
-        cout << "started unit" << endl;
+        try {
+            start(path);
+            cout << "started unit" << endl;
+        } catch (...) {
+        }
     } else if (command == "stop") {
-        stop(path);
-        cout << "stopped unit" << endl;
+        try {
+            stop(path);
+            cout << "stopped unit" << endl;
+        } catch (...) {
+        }
     } else if (command == "exists") {
-        if (exists(path)) {
-            cout << "unit exists";
-        } else {
-            cout << "unit doesn't exists";
+        try {
+            if (exists(path)) {
+                cout << "unit exists";
+            } else {
+                cout << "unit doesn't exists";
+            }
+        } catch (...) {
         }
     } else if (command == "status") {
-        loaded_unit unit = status(path);
-        display_loaded_unit(unit);
+        try {
+            loaded_unit unit = status(path);
+            display_loaded_unit(unit);
+        } catch (...) {
+        }
     } else {
         cout << opts;
         return 1;

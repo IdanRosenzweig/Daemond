@@ -2,6 +2,7 @@
 #include <filesystem>
 #include <fstream>
 #include <iostream>
+#include <boost/archive/archive_exception.hpp>
 
 #include "injector.h"
 
@@ -45,36 +46,65 @@ int main() {
 
         switch (code) {
             case LOAD_UNIT: {
-                unit_data static_data = deserialize_unit_data(ustring{curr_ptr, curr_sz});
+                unit_data static_data;
+                try {
+                    static_data = deserialize_unit_data(ustring{curr_ptr, curr_sz});
+                } catch (...) {
+                    cerr << "caught exception while deserializing unit" << endl;
+                    break;
+                }
 
                 cout << "loading unit with id: " << static_data.id.name << endl;
                 get_unit_manager()->load_unit(static_data);
-
                 break;
             }
             case UNLOAD_UNIT: {
-                unit_id id = deserialize_unit_id(ustring{curr_ptr, curr_sz});
+                unit_id id;
+                try {
+                    id = deserialize_unit_id(ustring{curr_ptr, curr_sz});
+                } catch (...) {
+                    cerr << "caught exception while deserializing unit id" << endl;
+                    break;
+                }
 
                 cout << "unloading unit with id: " << id.name << endl;
                 get_unit_manager()->unload_unit(id);
                 break;
             }
             case START_UNIT: {
-                unit_id id = deserialize_unit_id(ustring{curr_ptr, curr_sz});
+                unit_id id;
+                try {
+                    id = deserialize_unit_id(ustring{curr_ptr, curr_sz});
+                } catch (...) {
+                    cerr << "caught exception while deserializing unit id" << endl;
+                    break;
+                }
 
                 cout << "starting unit with id: " << id.name << endl;
                 get_unit_manager()->start_unit(id);
                 break;
             }
             case STOP_UNIT: {
-                unit_id id = deserialize_unit_id(ustring{curr_ptr, curr_sz});
+                unit_id id;
+                try {
+                    id = deserialize_unit_id(ustring{curr_ptr, curr_sz});
+                } catch (...) {
+                    cerr << "caught exception while deserializing unit id" << endl;
+                    break;
+                }
 
                 cout << "stopping unit with id: " << id.name << endl;
                 get_unit_manager()->stop_unit(id);
                 break;
             }
             case TEST_UNIT_EXISTS: {
-                unit_id id = deserialize_unit_id(ustring{curr_ptr, curr_sz});
+                unit_id id;
+                try {
+                    id = deserialize_unit_id(ustring{curr_ptr, curr_sz});
+                } catch (...) {
+                    cerr << "caught exception while deserializing unit id" << endl;
+                    break;
+                }
 
                 bool exists = get_unit_manager()->unit_exists(id);
                 if (sess->send_data(&exists, sizeof(exists)) != sizeof(exists)) cerr << "couldn't send whole data" << endl;
@@ -82,7 +112,13 @@ int main() {
                 break;
             }
             case GET_UNIT_STATUS: {
-                unit_id id = deserialize_unit_id(ustring{curr_ptr, curr_sz});
+                unit_id id;
+                try {
+                    id = deserialize_unit_id(ustring{curr_ptr, curr_sz});
+                } catch (...) {
+                    cerr << "caught exception while deserializing unit id" << endl;
+                    break;
+                }
 
                 if (!get_unit_manager()->unit_exists(id)) {
                     cerr << "not such unit" << endl;

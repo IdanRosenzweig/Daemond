@@ -11,6 +11,6 @@ struct loaded_unit {
 
 void display_loaded_unit(const loaded_unit& unit);
 
-loaded_unit* factory_generate_unit(); // implementation is OS specific
+loaded_unit* factory_generate_unit() noexcept; // implementation is OS specific
 
 #endif //LOADED_UNIT_H

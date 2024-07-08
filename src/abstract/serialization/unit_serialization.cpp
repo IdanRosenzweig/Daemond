@@ -20,16 +20,20 @@ void serialize_unit_data_to_file(const unit_data &data, const string &dest) {
 
 void serialize_unit_data_to_file(const string &source, const string &dest) {
     string cache = source;
-    replace(cache.begin(), cache.end(), '/', '.');
+    ranges::replace(cache.begin(), cache.end(), '/', '.');
     cache = "unit_" + cache;
 
     create_cache_dir();
     if (!is_in_cache(cache)) {
-        cout << "unit data not in cache, compiling unit..." << endl;
-        string command = PROJECT_DIR "/scripts/serialize.sh unit ";
+        cout << "unit data not in cache, serializing unit..." << endl;
+        string command = PROJECT_DIR "/scripts/serialize.sh" " unit ";
         command += source;
         system(command.c_str());
 
+        if (!filesystem::exists("serialized_unit.txt")) {
+            cerr << "couldn't find serialized unit" << endl;
+            throw;
+        }
         store_in_cache(cache, "serialized_unit.txt");
     }
 
@@ -79,16 +83,20 @@ void serialize_unit_id_to_file(const unit_id &id, const string &dest) {
 
 void serialize_unit_id_to_file(const string &source, const string &dest) {
     string cache = source;
-    replace(cache.begin(), cache.end(), '/', '.');
+    ranges::replace(cache.begin(), cache.end(), '/', '.');
     cache = "id_" + cache;
 
     create_cache_dir();
     if (!is_in_cache(cache)) {
-        cout << "unit id is not in cache, compiling unit..." << endl;
-        string command = PROJECT_DIR "/scripts/serialize.sh id ";
+        cout << "unit id is not in cache, serializing unit..." << endl;
+        string command = PROJECT_DIR "/scripts/serialize.sh" " id ";
         command += source;
         system(command.c_str());
 
+        if (!filesystem::exists("serialized_unit_id.txt")) {
+            cerr << "couldn't find serialized unit" << endl;
+            throw;
+        }
         store_in_cache(cache, "serialized_unit_id.txt");
     }
 
